@@ -1,6 +1,8 @@
 local shell = require( "shell" )
 local fs = require( "filesystem" )
 
+ABSPATH = "/home/htmlFiles/"
+
 function findLast( haystack, needle )
     local i = string.match( haystack, ".*" .. needle .. "()" )
     if i == nil then
@@ -11,8 +13,6 @@ function findLast( haystack, needle )
 end
 
 function getHtml( link )
-
-  local ABSPATH = "/home/htmlFiles/"
 
   local lastSlashIndex = findLast( link, "/" )
   local fileName = string.sub( link, lastSlashIndex + 1 )
@@ -25,7 +25,7 @@ function getHtml( link )
     fileName = fileName .. ".extended"
   end
 
-  shell.execute( "wget " .. link .. " /home/htmlFiles/" .. fileName )
+  shell.execute( "wget " .. link .. " " .. ABSPATH .. fileName )
   return ABSPATH .. fileName
 end
 
@@ -75,16 +75,17 @@ function extractHtmlFile( file )
           local tempFile = getHtml( "https://github.com" .. extractURL( line ) )
           extractHtmlFile( tempFile )
           isDirectory = false
+        else
+          print( extractURL( line ) )
         end
-        print( extractURL( line ) )
       end
-
-
     end
   end
-
 end
 
 local myrepo = "https://github.com/Acconitum/minecraft.git"
 local myfile = getHtml( myrepo )
 extractHtmlFile( myfile )
+
+
+shell.execute( "rm -rf "  .. ABSPATH )
