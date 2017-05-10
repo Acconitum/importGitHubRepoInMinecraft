@@ -3,18 +3,27 @@ local fs = require( "filesystem" )
 local tablePattern = "<table class=\"files"
 
 function getHtml( link )
-  local offset = 10
-  shell.execute( "mkdir -q htmlFiles" )
-  if fs.exists( "htmlFiles/" .. string.sub( link, string.len( link ) - offset ) ) then
-    offset = offset + 1
+
+  local lastSlashIndex = link.lastIndexOf( "/" )
+  local fileName = string.sub( link, lastSlashIndex )
+
+  if not fs.exists( "htmlFiles" ) then
+    shell.execute( "mkdir htmlFiles" )
   end
-  shell.execute( "wget" .. link .. " htmlFiles/" .. string.sub( link, string.len( link ) - offset ) )
-  return "htmlFiles/" .. string.sub( link, string.len( link ) - offset )
+
+  if fs.exists( "htmlFiles/" .. fileName ) then
+    fileName = fileName .. ".extended"
+  end
+
+  shell.execute( "wget" .. link .. " htmlFiles/" .. fileName )
+  return "htmlFiles/" .. fileName
 end
 
 function extractURL( inputString )
+
   local _, stop = string.find( inputString, "(.+href=\")" )
   local temp = string.sub( inputString, stop, string.len( inputString ) )
   local start, _ = string.find( temp, "\"" )
+  
   return string.sub( temp, 1, start )
 end
