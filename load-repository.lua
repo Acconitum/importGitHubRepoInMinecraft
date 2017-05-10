@@ -2,7 +2,7 @@ local shell = require( "shell" )
 local fs = require( "filesystem" )
 
 function findLast( haystack, needle )
-    local i = haystack:match( ".*" .. needle .. "()" )
+    local i = string.match( haystack, ".*" .. needle .. "()" )
     if i == nil then
       return nil
     else
