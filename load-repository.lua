@@ -1,6 +1,5 @@
 local shell = require( "shell" )
 local fs = require( "filesystem" )
-local tablePattern = "<table class=\"files"
 
 function getHtml( link )
 
@@ -24,6 +23,51 @@ function extractURL( inputString )
   local _, stop = string.find( inputString, "(.+href=\")" )
   local temp = string.sub( inputString, stop, string.len( inputString ) )
   local start, _ = string.find( temp, "\"" )
-  
+
   return string.sub( temp, 1, start )
 end
+
+function extractHtmlFile( file )
+
+  if fs.exists( file ) then
+    local htmlFile = io.open( file, "r" )
+  else
+    print( file .. " not found")
+    return
+  end
+
+  local pattern = "<table class=\"files"
+  local endPattern = "</table>"
+  local patternFound = false
+  local isDirectory = false
+  local index = 1
+
+  for line in htmlFile:lines() do
+
+    if string.find( line, pattern ) then
+      patternFound = true
+    end
+
+    if string.find( line, endPattern ) then
+      patternFound = false
+    end
+
+    if patternFound then
+
+      if string.find( line, "directory" ) then
+        isDirectory = true
+      end
+
+      if string.find( line, "<a href=\"" ) and not string.find( line, "commit" ) then
+        print( extractURL( line) )
+      end
+
+
+    end
+  end
+
+end
+
+local myrepo = "https://githun.com/Acconitum/minecraft.git"
+local myfile = getHtml( repo )
+extractHtmlFile( myfile )
