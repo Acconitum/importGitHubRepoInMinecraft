@@ -23,7 +23,7 @@ function getHtml( link )
     fileName = fileName .. ".extended"
   end
 
-  shell.execute( "wget" .. link .. " htmlFiles/" .. fileName )
+  shell.execute( "wget " .. link .. " htmlFiles/" .. fileName )
   return "htmlFiles/" .. fileName
 end
 
@@ -77,6 +77,6 @@ function extractHtmlFile( file )
 
 end
 
-local myrepo = "https://githun.com/Acconitum/minecraft.git"
-local myfile = getHtml( repo )
+local myrepo = "https://github.com/Acconitum/minecraft.git"
+local myfile = getHtml( myrepo )
 extractHtmlFile( myfile )
