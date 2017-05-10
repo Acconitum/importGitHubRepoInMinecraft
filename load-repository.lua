@@ -12,19 +12,21 @@ end
 
 function getHtml( link )
 
+  local ABSPATH = "/home/htmlFiles/"
+
   local lastSlashIndex = findLast( link, "/" )
   local fileName = string.sub( link, lastSlashIndex + 1 )
 
-  if not fs.exists( "htmlFiles" ) then
+  if not fs.exists( ABSPATH ) then
     shell.execute( "mkdir htmlFiles" )
   end
 
-  if fs.exists( "htmlFiles/" .. fileName ) then
+  if fs.exists( ABSPATH .. fileName ) then
     fileName = fileName .. ".extended"
   end
 
   shell.execute( "wget " .. link .. " /home/htmlFiles/" .. fileName )
-  return "/home/htmlFiles/" .. fileName
+  return ABSPATH .. fileName
 end
 
 function extractURL( inputString )
@@ -63,15 +65,16 @@ function extractHtmlFile( file )
 
     if patternFound then
 
-      if string.find( line, "directory" ) then
+      if string.find( line, "directory" ) and not string.find( line, "Go to parent directory" ) then
         isDirectory = true
       end
 
       if string.find( line, "<a href=\"" ) and not string.find( line, "commit" ) and not string.find( line, "Go to parent directory" ) then
 
-        if directory then
-          local file = getHtml( "https://github.com" .. extractURL( line ) )
-          extractHtmlFile( file )
+        if isDirectory then
+          local tempFile = getHtml( "https://github.com" .. extractURL( line ) )
+          extractHtmlFile( tempFile )
+          isDirectory = false
         end
         print( extractURL( line ) )
       end
