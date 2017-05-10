@@ -13,7 +13,7 @@ end
 function getHtml( link )
 
   local lastSlashIndex = findLast( link, "/" )
-  local fileName = string.sub( link, lastSlashIndex )
+  local fileName = string.sub( link, lastSlashIndex + 1 )
 
   if not fs.exists( "htmlFiles" ) then
     shell.execute( "mkdir htmlFiles" )
@@ -23,23 +23,23 @@ function getHtml( link )
     fileName = fileName .. ".extended"
   end
 
-  shell.execute( "wget " .. link .. " htmlFiles/" .. fileName )
-  return "htmlFiles/" .. fileName
+  shell.execute( "wget " .. link .. " /home/htmlFiles/" .. fileName )
+  return "/home/htmlFiles/" .. fileName
 end
 
 function extractURL( inputString )
 
   local _, stop = string.find( inputString, "(.+href=\")" )
-  local temp = string.sub( inputString, stop, string.len( inputString ) )
+  local temp = string.sub( inputString, stop + 1, string.len( inputString ) )
   local start, _ = string.find( temp, "\"" )
 
-  return string.sub( temp, 1, start )
+  return string.sub( temp, 1, start - 1 )
 end
 
 function extractHtmlFile( file )
 
   if fs.exists( file ) then
-    local htmlFile = io.open( file, "r" )
+    htmlFile = io.open( file, "r" )
   else
     print( file .. " not found")
     return
