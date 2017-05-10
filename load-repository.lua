@@ -67,8 +67,13 @@ function extractHtmlFile( file )
         isDirectory = true
       end
 
-      if string.find( line, "<a href=\"" ) and not string.find( line, "commit" ) then
-        print( extractURL( line) )
+      if string.find( line, "<a href=\"" ) and not string.find( line, "commit" ) and not string.find( line, "Go to parent directory" ) then
+
+        if directory then
+          local file = getHtml( "https://github.com" .. extractURL( line ) )
+          extractHtmlFile( file )
+        end
+        print( extractURL( line ) )
       end
 
 
