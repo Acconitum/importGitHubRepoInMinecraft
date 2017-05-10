@@ -1,9 +1,18 @@
 local shell = require( "shell" )
 local fs = require( "filesystem" )
 
+function findLast( haystack, needle )
+    local i = haystack:match( ".*" .. needle .. "()" )
+    if i == nil then
+      return nil
+    else
+      return i - 1
+    end
+end
+
 function getHtml( link )
 
-  local lastSlashIndex = link.lastIndexOf( "/" )
+  local lastSlashIndex = findLast( link, "/" )
   local fileName = string.sub( link, lastSlashIndex )
 
   if not fs.exists( "htmlFiles" ) then
