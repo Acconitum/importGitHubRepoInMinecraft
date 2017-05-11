@@ -132,6 +132,3 @@ end
 local myrepo = "https://github.com/Acconitum/minecraft.git"
 local myfile = getHtml( myrepo )
 extractHtmlFile( myfile )
-
-
-shell.execute( "rm -rf "  .. ABSPATH )
