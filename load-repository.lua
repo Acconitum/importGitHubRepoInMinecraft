@@ -23,7 +23,9 @@ function createDirectory( requestedPath )
     shell.execute( "mkdir htmlFiles" )
   end
 
-  if requestedPath not nil then
+  if requestedPath == nil then
+    return
+  else
     if  not fs.exists( requestedPath ) then
       shell.execute( "mkdir " .. requestedPath )
     end
