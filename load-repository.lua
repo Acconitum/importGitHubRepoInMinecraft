@@ -66,7 +66,7 @@ function extractHtmlFile( file, isDir )
     saveDir = "/home/" .. getFileName( file )
     createDirectory( saveDir )
   else
-    saveDir = "/home/"
+    saveDir = "/home"
   end
 
   if fs.exists( file ) then
@@ -81,6 +81,7 @@ function extractHtmlFile( file, isDir )
   local patternFound = false
   local isDirectory = false
   local index = 1
+  local prefix = "https://raw.githubusercontent.com"
 
   for line in htmlFile:lines() do
 
@@ -105,12 +106,12 @@ function extractHtmlFile( file, isDir )
           extractHtmlFile( tempFile, isDirectory )
           isDirectory = false
         else
-          print( saveDir .. extractURL( line ) )
+          shell.execute( "wget " .. prefix .. extractURL( link ) .. " " .. saveDir .. extractURL( line ) )
         end
       end
     end
   end
-  saveDir = "/home/"
+  saveDir = "/home"
   htmlFile:close()
 end
 
