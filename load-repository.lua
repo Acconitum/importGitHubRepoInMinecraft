@@ -61,7 +61,7 @@ function extractURL( inputString )
   local temp = string.sub( inputString, stop + 1, string.len( inputString ) )
   local start, _ = string.find( temp, "\"" )
   local returnString = string.sub( temp, 1, start - 1 )
-  local temp2 = returnstring
+  local temp2 = returnString
 
   if string.find( temp2, "blob/" ) then
     start, stop = string.find( temp2, "blob/" )
