@@ -23,7 +23,7 @@ function createDirectory( requestedPath )
     shell.execute( "mkdir htmlFiles" )
   end
 
-  if not fs.exists( requestedPath ) then
+  if requestedPath not nil and not fs.exists( requestedPath ) then
     shell.execute( "mkdir " .. requestedPath )
   end
 end
@@ -38,9 +38,12 @@ function getSaveFileName( requestedFileName )
 end
 
 function getHtml( link )
-
+  
+  createDirectory()
   local fileName = getFileName( link )
+  print(filename)
   local saveFileName = getSaveFileName( fileName )
+  print(saveFileName)
 
   shell.execute( "wget " .. link .. " " .. ABSPATH .. saveFileName )
   return ABSPATH .. saveFileName
