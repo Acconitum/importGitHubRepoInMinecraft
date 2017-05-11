@@ -60,12 +60,18 @@ function extractURL( inputString )
   local _, stop = string.find( inputString, "(.+href=\")" )
   local temp = string.sub( inputString, stop + 1, string.len( inputString ) )
   local start, _ = string.find( temp, "\"" )
-  temp2 = string.sub( temp, 1, start - 1 )
+  local returnString = string.sub( temp, 1, start - 1 )
 
-  start, stop = string.find( temp2, "blob/" )
-  temp = string.sub( temp2, 1, start - 1  )
-  temp2 = string.sub( temp2, stop + 1 , string.len( temp2 ) )
-  return temp .. temp2
+  if string.find( temp2, "blob/" ) then
+    local temp2 = returnstring
+    start, stop = string.find( temp2, "blob/" )
+    temp = string.sub( temp2, 1, start - 1  )
+    temp2 = string.sub( temp2, stop + 1 , string.len( temp2 ) )
+    return temp .. temp2
+  else
+    return returString
+  end
+
 end
 
 function extractHtmlFile( file, isDir )
