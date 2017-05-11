@@ -65,10 +65,10 @@ end
 function extractHtmlFile( file, isDir )
 
   if isDir then
-    local saveDir = "/Home/" .. getFileName( file )
+    saveDir = "/home/" .. getFileName( file ) .. "/"
     createDirectory( saveDir )
   else
-    local saveDir = "/home/"
+    saveDir = "/home/"
   end
 
   if fs.exists( file ) then
@@ -104,14 +104,16 @@ function extractHtmlFile( file, isDir )
 
         if isDirectory then
           local tempFile = getHtml( "https://github.com" .. extractURL( line ) )
-          extractHtmlFile( tempFile, true )
+          extractHtmlFile( tempFile, isDirectory )
           isDirectory = false
         else
-          print( saveDir )
+          print( saveDir extractURL( line ) )
         end
       end
     end
   end
+  saveDir = "/home/"
+  htmlFile:close()
 end
 
 local myrepo = "https://github.com/Acconitum/minecraft.git"
