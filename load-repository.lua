@@ -61,15 +61,15 @@ function extractURL( inputString )
   local temp = string.sub( inputString, stop + 1, string.len( inputString ) )
   local start, _ = string.find( temp, "\"" )
   local returnString = string.sub( temp, 1, start - 1 )
+  local temp2 = returnstring
 
   if string.find( temp2, "blob/" ) then
-    local temp2 = returnstring
     start, stop = string.find( temp2, "blob/" )
     temp = string.sub( temp2, 1, start - 1  )
     temp2 = string.sub( temp2, stop + 1 , string.len( temp2 ) )
     return temp .. temp2
   else
-    return returString
+    return returnString
   end
 
 end
