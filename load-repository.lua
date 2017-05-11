@@ -41,13 +41,17 @@ function getSaveFileName( requestedFileName )
   return requestedFileName
 end
 
-function getHtml( link )
+function getHtml( link, rawFileDir )
 
   createDirectory()
   local fileName = getFileName( link )
   local saveFileName = getSaveFileName( fileName )
 
-  shell.execute( "wget " .. link .. " " .. ABSPATH .. saveFileName )
+  if rawFileDir == nil then
+    shell.execute( "wget " .. link .. " " .. ABSPATH .. saveFileName )
+  else
+    shell.execute( "wget " .. link .. " " .. rawFileDir .. saveFileName )
+  end
   return ABSPATH .. saveFileName
 end
 
@@ -106,7 +110,7 @@ function extractHtmlFile( file, isDir )
           extractHtmlFile( tempFile, isDirectory )
           isDirectory = false
         else
-          shell.execute( "wget " .. prefix .. extractURL( link ) .. " " .. saveDir .. extractURL( line ) )
+          getHtml( prefix .. extractURL( line, saveDir ) )
         end
       end
     end
