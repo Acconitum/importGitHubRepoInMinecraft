@@ -12,21 +12,38 @@ function findLast( haystack, needle )
     end
 end
 
-function getHtml( link )
+function getFileName( tempString )
+  local lastSlashIndex = findLast( tempString, "/" )
+  return string.sub( tempString, lastSlashIndex + 1 )
+end
 
-  local lastSlashIndex = findLast( link, "/" )
-  local fileName = string.sub( link, lastSlashIndex + 1 )
+function createDirectory( requestedPath )
 
   if not fs.exists( ABSPATH ) then
     shell.execute( "mkdir htmlFiles" )
   end
 
-  if fs.exists( ABSPATH .. fileName ) then
-    fileName = fileName .. ".extended"
+  if not fs.exists( requestedPath ) then
+    shell.execute( "mkdir " .. requestedPath )
+  end
+end
+
+function getSaveFileName( requestedFileName )
+
+  while fs.exists( ABSPATH .. requestedFileName ) do
+    requestedFileName = requestedFileName .. "-extend"
   end
 
-  shell.execute( "wget " .. link .. " " .. ABSPATH .. fileName )
-  return ABSPATH .. fileName
+  return requestedFileName
+end
+
+function getHtml( link )
+
+  local fileName = getFileName( link )
+  local saveFileName = getSaveFileName( fileName )
+
+  shell.execute( "wget " .. link .. " " .. ABSPATH .. saveFileName )
+  return ABSPATH .. saveFileName
 end
 
 function extractURL( inputString )
@@ -38,7 +55,14 @@ function extractURL( inputString )
   return string.sub( temp, 1, start - 1 )
 end
 
-function extractHtmlFile( file )
+function extractHtmlFile( file, isDir )
+
+  if isDir then
+    local saveDir = "/Home/" .. getFileName( file )
+    createDirectory( saveDir )
+  else
+    local saveDir = "/home/"
+  end
 
   if fs.exists( file ) then
     htmlFile = io.open( file, "r" )
@@ -73,10 +97,10 @@ function extractHtmlFile( file )
 
         if isDirectory then
           local tempFile = getHtml( "https://github.com" .. extractURL( line ) )
-          extractHtmlFile( tempFile )
+          extractHtmlFile( tempFile, true )
           isDirectory = false
         else
-          print( extractURL( line ) )
+          print( saveDir )
         end
       end
     end
