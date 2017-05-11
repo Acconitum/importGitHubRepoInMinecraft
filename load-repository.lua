@@ -45,9 +45,7 @@ function getHtml( link )
 
   createDirectory()
   local fileName = getFileName( link )
-  print(filename)
   local saveFileName = getSaveFileName( fileName )
-  print(saveFileName)
 
   shell.execute( "wget " .. link .. " " .. ABSPATH .. saveFileName )
   return ABSPATH .. saveFileName
@@ -65,7 +63,7 @@ end
 function extractHtmlFile( file, isDir )
 
   if isDir then
-    saveDir = "/home/" .. getFileName( file ) .. "/"
+    saveDir = "/home/" .. getFileName( file )
     createDirectory( saveDir )
   else
     saveDir = "/home/"
@@ -107,7 +105,7 @@ function extractHtmlFile( file, isDir )
           extractHtmlFile( tempFile, isDirectory )
           isDirectory = false
         else
-          print( saveDir extractURL( line ) )
+          print( saveDir .. extractURL( line ) )
         end
       end
     end
