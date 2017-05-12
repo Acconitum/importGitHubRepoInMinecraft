@@ -1,7 +1,7 @@
+local myrepo = "https://github.com/Acconitum/minecraft.git"
 local shell = require( "shell" )
 local fs = require( "filesystem" )
 
-ABSPATH = "/home/htmlFiles/"
 
 function findLast( haystack, needle )
     local i = string.match( haystack, ".*" .. needle .. "()" )
@@ -19,14 +19,10 @@ end
 
 function createDirectory( requestedPath )
 
-  if not fs.exists( ABSPATH ) then
-    shell.execute( "mkdir htmlFiles" )
-  end
-
   if requestedPath == nil then
     return
   else
-    if  not fs.exists( requestedPath ) then
+    if not fs.exists( requestedPath ) then
       shell.execute( "mkdir " .. requestedPath )
     end
   end
@@ -41,9 +37,17 @@ function getSaveFileName( requestedFileName )
   return requestedFileName
 end
 
+local a = findLast( myrepo, "\." )
+
+ ABSPATH = "/home/" .. getFileName( string.sub( myrepo, a + 1 ) )
+
+
+
+
+
 function getHtml( link, rawFileDir )
 
-  createDirectory()
+  createDirectory( ABSPATH )
   local fileName = getFileName( link )
   local saveFileName = getSaveFileName( fileName )
 
@@ -77,10 +81,10 @@ end
 function extractHtmlFile( file, isDir )
 
   if isDir then
-    saveDir = "/home/" .. getFileName( file )
+    saveDir = ABSPATH .. getFileName( file )
     createDirectory( saveDir )
   else
-    saveDir = "/home"
+    saveDir = ABSPATH
   end
 
   if fs.exists( file ) then
@@ -120,7 +124,7 @@ function extractHtmlFile( file, isDir )
           extractHtmlFile( tempFile, isDirectory )
           isDirectory = false
         else
-          getHtml( prefix .. extractURL( line, saveDir ) )
+          getHtml( prefix .. extractURL( line ), saveDir )
         end
       end
     end
@@ -129,6 +133,5 @@ function extractHtmlFile( file, isDir )
   htmlFile:close()
 end
 
-local myrepo = "https://github.com/Acconitum/minecraft.git"
 local myfile = getHtml( myrepo )
 extractHtmlFile( myfile )
