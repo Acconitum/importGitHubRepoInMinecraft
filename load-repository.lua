@@ -1,6 +1,7 @@
 local myrepo = "https://github.com/Acconitum/minecraft.git"
 local shell = require( "shell" )
 local fs = require( "filesystem" )
+ABSPATH = "/home/"
 
 
 function findLast( haystack, needle )
@@ -37,26 +38,13 @@ function getSaveFileName( requestedFileName )
   return requestedFileName
 end
 
-local a = findLast( myrepo, "\." )
+function getHtml( link )
 
- ABSPATH = "/home/" .. getFileName( string.sub( myrepo, a + 1 ) )
-
-
-
-
-
-function getHtml( link, rawFileDir )
-
-  createDirectory( ABSPATH )
   local fileName = getFileName( link )
   local saveFileName = getSaveFileName( fileName )
+  shell.execute( "wget " .. link .. " " .. saveDir .. saveFileName )
 
-  if rawFileDir == nil then
-    shell.execute( "wget " .. link .. " " .. ABSPATH .. saveFileName )
-  else
-    shell.execute( "wget " .. link .. " " .. rawFileDir .. saveFileName )
-  end
-  return ABSPATH .. saveFileName
+  return saveDir .. saveFileName
 end
 
 function extractURL( inputString )
@@ -120,7 +108,9 @@ function extractHtmlFile( file, isDir )
       if string.find( line, "<a href=\"" ) and not string.find( line, "commit" ) and not string.find( line, "Go to parent directory" ) then
 
         if isDirectory then
-          local tempFile = getHtml( "https://github.com" .. extractURL( line ) )
+          local tempFile = getHtml( "https://github.com" .. extractURL( line ), ABSPATH )
+          saveDir = ABSPATH .. repoName .. getFileName( file )
+          createDirectory( saveDir )
           extractHtmlFile( tempFile, isDirectory )
           isDirectory = false
         else
@@ -129,9 +119,14 @@ function extractHtmlFile( file, isDir )
       end
     end
   end
-  saveDir = "/home"
+  saveDir = ABSPATH .. repoName
   htmlFile:close()
 end
 
-local myfile = getHtml( myrepo )
+local a = findLast( myrepo, "\." )
+repoName = getFileName( string.sub( myrepo, a + 1 ) )
+saveDir = ABSPATH .. repoName
+createDirectory( ABSPATH )
+
+local myfile = getHtml( myrepo, saveDir )
 extractHtmlFile( myfile )
