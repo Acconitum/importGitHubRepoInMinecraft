@@ -99,6 +99,8 @@ function extractHtmlFile( file, isDir )
       patternFound = false
     end
 
+    test
+
     if patternFound then
 
       if string.find( line, "directory" ) and not string.find( line, "Go to parent directory" ) then
