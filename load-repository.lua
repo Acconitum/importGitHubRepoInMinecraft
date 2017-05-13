@@ -119,13 +119,14 @@ function extractHtmlFile( file, isDir )
       end
     end
   end
-  saveDir = ABSPATH .. repoName
+  saveDir = ABSPATH .. repoName .. "/"
   htmlFile:close()
 end
 
 local a = findLast( myrepo, "\." )
-repoName = getFileName( string.sub( myrepo, a + 1 ) )
-saveDir = ABSPATH .. repoName
+temprepo = getFileName( myrepo )
+repoName = string.sub( temprepo, a + 1 ) )
+saveDir = ABSPATH .. repoName .. "/"
 createDirectory( ABSPATH )
 
 local myfile = getHtml( myrepo, saveDir )
