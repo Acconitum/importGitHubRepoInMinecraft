@@ -109,7 +109,7 @@ function extractHtmlFile( file, isDir )
 
         if isDirectory then
           local tempFile = getHtml( "https://github.com" .. extractURL( line ), ABSPATH )
-          saveDir = ABSPATH .. repoName .. getFileName( file )
+          saveDir = ABSPATH .. repoName .. getFileName( file ) .. "/"
           createDirectory( saveDir )
           extractHtmlFile( tempFile, isDirectory )
           isDirectory = false
@@ -123,9 +123,9 @@ function extractHtmlFile( file, isDir )
   htmlFile:close()
 end
 
-local a = findLast( myrepo, "\." )
+local a = findLast( myrepo, "." )
 temprepo = getFileName( myrepo )
-repoName = string.sub( temprepo, a + 1 ) )
+repoName = string.sub( temprepo, a + 1 )
 saveDir = ABSPATH .. repoName .. "/"
 createDirectory( ABSPATH )
 
