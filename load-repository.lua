@@ -1,7 +1,7 @@
 local myrepo = "https://github.com/Acconitum/minecraft.git"
 local shell = require( "shell" )
 local fs = require( "filesystem" )
-ABSPATH = "/home/"
+ABSPATH = "/home"
 
 
 function findLast( haystack, needle )
@@ -42,7 +42,7 @@ function getHtml( link )
 
   local fileName = getFileName( link )
   local saveFileName = getSaveFileName( fileName )
-  shell.execute( "wget " .. link .. " " .. saveDir .. saveFileName )
+  shell.execute( "wget " .. link .. " " .. saveDir .. "/" .. saveFileName )
 
   return saveDir .. saveFileName
 end
@@ -72,7 +72,7 @@ function extractHtmlFile( file, isDir )
     saveDir = ABSPATH .. getFileName( file )
     createDirectory( saveDir )
   else
-    saveDir = ABSPATH
+    saveDir = ABSPATH .. "/"
   end
 
   if fs.exists( file ) then
