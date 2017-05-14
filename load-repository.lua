@@ -40,6 +40,17 @@ end
 
 function getHtml( link )
 
+  --TODO prüfen ob order existiert
+  -- pfad = link - benutzer - fileName
+  -- erst prüfen wo das rpo beginnt zb minecraft
+  -- danach ab letztem / entfernen
+
+  --TODO wenn nicht existent erstellen
+
+  --TODO wget aufruf mit speicherort ABSPATH + link inklusive reponame
+
+
+
   local fileName = getFileName( link )
   local saveFileName = getSaveFileName( fileName )
   shell.execute( "wget " .. link .. " " .. saveDir .. "/" .. saveFileName )
@@ -66,14 +77,7 @@ function extractURL( inputString )
 
 end
 
-function extractHtmlFile( file, isDir )
-
-  if isDir then
-    saveDir = ABSPATH .. getFileName( file )
-    createDirectory( saveDir )
-  else
-    saveDir = ABSPATH .. "/"
-  end
+function extractHtmlFile( file )
 
   if fs.exists( file ) then
     htmlFile = io.open( file, "r" )
@@ -109,9 +113,7 @@ function extractHtmlFile( file, isDir )
 
         if isDirectory then
           local tempFile = getHtml( "https://github.com" .. extractURL( line ), ABSPATH )
-          saveDir = ABSPATH .. repoName .. getFileName( file ) .. "/"
-          createDirectory( saveDir )
-          extractHtmlFile( tempFile, isDirectory )
+          extractHtmlFile( tempFile )
           isDirectory = false
         else
           getHtml( prefix .. extractURL( line ), saveDir )
@@ -119,15 +121,20 @@ function extractHtmlFile( file, isDir )
       end
     end
   end
-  saveDir = ABSPATH .. repoName .. "/"
+  saveDir = ABSPATH .. "/" .. repoName .. "/"
   htmlFile:close()
 end
 
-local a = findLast( myrepo, "." )
-temprepo = getFileName( myrepo )
-repoName = string.sub( temprepo, a + 1 )
-saveDir = ABSPATH .. repoName .. "/"
+
+--TODO korrektes erstellen des ABSPATH mit repoName
+
+local temp = getFileName( myrepo )
+local lastDot = findLast( temprepo, "." )
+repoName = string.sub( temprepo, 1, lastDot - 1 )
+ABSPATH = "/home/" .. repoName
 createDirectory( ABSPATH )
 
-local myfile = getHtml( myrepo, saveDir )
-extractHtmlFile( myfile )
+print(ABSPATH)
+
+--local myfile = getHtml( myrepo, saveDir )
+--extractHtmlFile( myfile )
