@@ -35,17 +35,10 @@ function getSavePath( link )
   if string.find( link, placeHolder ) then
 
     _, stop = string.find( link, placeHolder )
-    local savePath = string.sub( link, stop + 2 )
-    local i = 1
-    while fs.exists( ABSPATH .. REPONAME .. savePath ) do
-      savePath = savePath .. i
-      i = i + 1
-    end
+    local savePath = string.sub( link, stop + 2
 
     createDirectory( ABSPATH .. savePath )
     return savePath
-  else
-    return false
   end
 end
 
@@ -138,6 +131,12 @@ local temp = getFileName( myrepo )
 local gitExtension, _ = string.find( temp, ".git" )
 REPONAME = string.sub( temp, 1, gitExtension - 1 )
 ABSPATH = "/home/"
+
+--local i = 1
+--while fs.exists( ABSPATH .. REPONAME .. savePath ) do
+  --savePath = savePath .. i
+  --i = i + 1
+--end
 
 --TODO handling if repository already exists
 createDirectory( ABSPATH .. REPONAME )
