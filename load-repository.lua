@@ -129,8 +129,8 @@ end
 --TODO korrektes erstellen des ABSPATH mit repoName
 
 local temp = getFileName( myrepo )
-local lastDot = findLast( temprepo, "." )
-repoName = string.sub( temprepo, 1, lastDot - 1 )
+local lastDot = findLast( temp, "." )
+repoName = string.sub( temp, 1, lastDot - 1 )
 ABSPATH = "/home/" .. repoName
 createDirectory( ABSPATH )
 
