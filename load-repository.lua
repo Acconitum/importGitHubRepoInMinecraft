@@ -1,7 +1,6 @@
 local myrepo = "https://github.com/Acconitum/minecraft.git"
 local shell = require( "shell" )
 local fs = require( "filesystem" )
-ABSPATH = "/home"
 
 
 function findLast( haystack, needle )
@@ -29,6 +28,27 @@ function createDirectory( requestedPath )
   end
 end
 
+function getSavePath( link )
+
+  local placeHolder = "master"
+
+  if string.find( link, placeHolder ) then
+
+    _, stop = string.find( link, placeHolder )
+    local savePath = string.sub( link, stop + 2 )
+    local i = 1
+    while fs.exists( ABSPATH .. REPONAME .. savePath ) do
+      savePath = savePath .. i
+      i = i + 1
+    end
+
+    createDirectory( ABSPATH .. savePath )
+    return savePath
+  else
+    return false
+  end
+end
+
 function getSaveFileName( requestedFileName )
 
   while fs.exists( ABSPATH .. requestedFileName ) do
@@ -40,22 +60,14 @@ end
 
 function getHtml( link )
 
-  --TODO prüfen ob order existiert
-  -- pfad = link - benutzer - fileName
-  -- erst prüfen wo das rpo beginnt zb minecraft
-  -- danach ab letztem / entfernen
-
-  --TODO wenn nicht existent erstellen
-
-  --TODO wget aufruf mit speicherort ABSPATH + link inklusive reponame
-
-
-
-  local fileName = getFileName( link )
-  local saveFileName = getSaveFileName( fileName )
-  shell.execute( "wget " .. link .. " " .. saveDir .. "/" .. saveFileName )
-
-  return saveDir .. saveFileName
+  if string.find( link, "https" ) then
+    shell.execute( "wget " .. link .. " " .. ABSPATH .. REPONAME .. "/" .. getFileName( link ) .. ".html" )
+    return ABSPATH .. REPONAME .. "/" .. getFileName( link )
+  else
+    local prefix = "https://raw.githubusercontent.com"
+    shell.execute( "wget " .. prefix .. link .. " " .. ABSPATH .. REPONAME .. "/" ..  getSavePath( link ) )
+  end
+  return link
 end
 
 function extractURL( inputString )
@@ -90,8 +102,6 @@ function extractHtmlFile( file )
   local endPattern = "</table>"
   local patternFound = false
   local isDirectory = false
-  local index = 1
-  local prefix = "https://raw.githubusercontent.com"
 
   for line in htmlFile:lines() do
 
@@ -112,26 +122,25 @@ function extractHtmlFile( file )
       if string.find( line, "<a href=\"" ) and not string.find( line, "commit" ) and not string.find( line, "Go to parent directory" ) then
 
         if isDirectory then
-          local tempFile = getHtml( "https://github.com" .. extractURL( line ), ABSPATH )
+          local tempFile = getHtml( "https://github.com" .. extractURL( line ) )
           extractHtmlFile( tempFile )
           isDirectory = false
         else
-          getHtml( prefix .. extractURL( line ), saveDir )
+          getHtml( extractURL( line ) )
         end
       end
     end
   end
-  saveDir = ABSPATH .. "/" .. repoName .. "/"
   htmlFile:close()
 end
 
 local temp = getFileName( myrepo )
-local gitExtension, _ = string.sub( temp, ".git" )
-repoName = string.sub( temp, 1, gitExtension - 1 )
-ABSPATH = "/home/" .. repoName
-createDirectory( ABSPATH )
+local gitExtension, _ = string.find( temp, ".git" )
+REPONAME = string.sub( temp, 1, gitExtension - 1 )
+ABSPATH = "/home/"
 
-print(ABSPATH)
+--TODO handling if repository already exists
+createDirectory( ABSPATH .. REPONAME )
 
---local myfile = getHtml( myrepo, saveDir )
---extractHtmlFile( myfile )
+local myfile = getHtml( myrepo )
+extractHtmlFile( myfile )
