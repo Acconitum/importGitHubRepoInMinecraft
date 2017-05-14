@@ -125,12 +125,9 @@ function extractHtmlFile( file )
   htmlFile:close()
 end
 
-
---TODO korrektes erstellen des ABSPATH mit repoName
-
 local temp = getFileName( myrepo )
-local lastDot = findLast( temp, "." )
-repoName = string.sub( temp, 1, lastDot - 1 )
+local gitExtension, _ = string.sub( temp, ".git" )
+repoName = string.sub( temp, 1, gitExtension - 1 )
 ABSPATH = "/home/" .. repoName
 createDirectory( ABSPATH )
 
