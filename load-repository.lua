@@ -35,9 +35,10 @@ function getSavePath( link )
   if string.find( link, placeHolder ) then
 
     _, stop = string.find( link, placeHolder )
-    local savePath = string.sub( link, stop + 2
-
-    createDirectory( ABSPATH .. savePath )
+    local savePath = string.sub( link, stop + 2 )
+    local start = findLast( savePath, "/" )
+    local temp = string.sub( savePath, 1, start - 1)
+    createDirectory( ABSPATH .. REPONAME .. "/" .. temp )
     return savePath
   end
 end
