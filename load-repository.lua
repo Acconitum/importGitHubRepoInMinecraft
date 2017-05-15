@@ -43,6 +43,7 @@ function getSavePath( link )
       local temp = string.sub( savePath, 1, start - 1)
       createDirectory( ABSPATH .. REPONAME .. "/" .. temp )
       return savePath
+    end
   end
 end
 
