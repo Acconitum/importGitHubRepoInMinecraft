@@ -56,7 +56,7 @@ function getHtml( link )
 
   if string.find( link, "https" ) then
     shell.execute( "wget " .. link .. " " .. ABSPATH .. REPONAME .. "/" .. getFileName( link ) .. ".html" )
-    return ABSPATH .. REPONAME .. "/" .. getFileName( link )
+    return ABSPATH .. REPONAME .. "/" .. getFileName( link ) .. ".html"
   else
     local prefix = "https://raw.githubusercontent.com"
     shell.execute( "wget " .. prefix .. link .. " " .. ABSPATH .. REPONAME .. "/" ..  getSavePath( link ) )
