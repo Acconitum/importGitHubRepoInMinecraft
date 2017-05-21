@@ -158,13 +158,12 @@ local gitExtension, _ = string.find( temp, ".git" )
 REPONAME = string.sub( temp, 1, gitExtension - 1 )
 ABSPATH = "/home/"
 
---local i = 1
---while fs.exists( ABSPATH .. REPONAME .. savePath ) do
-  --savePath = savePath .. i
-  --i = i + 1
---end
+local i = 1
+while fs.exists( ABSPATH .. REPONAME ) do
+  REPONAME = REONAME .. i
+  i = i + 1
+end
 
---TODO handling if repository already exists
 createDirectory( ABSPATH .. REPONAME )
 
 local myfile = getHtml( myrepo )
