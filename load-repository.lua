@@ -3,6 +3,7 @@ local shell = require( "shell" )
 local fs = require( "filesystem" )
 
 
+
 function findLast( haystack, needle )
     local i = string.match( haystack, ".*" .. needle .. "()" )
     if i == nil then
@@ -132,7 +133,27 @@ function extractHtmlFile( file )
   htmlFile:close()
 end
 
-local temp = getFileName( myrepo )
+
+
+local argsRepo, branch = {...}
+
+if argsRepo == nil then
+  argsRepo = myrepo
+else
+
+  if string.find( argsRepo, ".git" ) == nil then
+    print( "please enter a valid gitrepository from gitHub.com" )
+    print( "Usage: load-repository <gitHub repositorylink (https)> [<branch>]" )
+    return
+  end
+end
+
+if branch == nil then
+  branch = "master"
+end
+
+
+local temp = getFileName( argsRepo )
 local gitExtension, _ = string.find( temp, ".git" )
 REPONAME = string.sub( temp, 1, gitExtension - 1 )
 ABSPATH = "/home/"
