@@ -160,7 +160,7 @@ ABSPATH = "/home/"
 
 local i = 1
 while fs.exists( ABSPATH .. REPONAME ) do
-  REPONAME = REONAME .. i
+  REPONAME = REPONAME .. i
   i = i + 1
 end
 
